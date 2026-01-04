@@ -4,11 +4,10 @@ const Role = require('../login/roleModel')
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 function getcookie(req) {
-    console.log(req.headers)
-    if(req.headers.cookie)
-    var cookie = req.headers.cookie;
-    // user=someone; session=mySessionID
-    return cookie.split('; ');
+  const cookieHeader = req.headers && req.headers.cookie;
+  if (!cookieHeader) return [];
+  // cookieHeader example: "user=someone; session=mySessionID"
+  return cookieHeader.split('; ').map(c => c.trim()).filter(Boolean);
 }
 exports.login = async (req, res) => {
     console.log("login: " + JSON.stringify(req.body))

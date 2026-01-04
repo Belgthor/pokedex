@@ -1,10 +1,12 @@
+require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
 const http = require('http')
 const mongoose = require('mongoose')
 var jwt = require("jsonwebtoken");
 const view = __dirname + '/view/browser/'
-const mongoDB = "mongodb://homelab:Genesis1979@192.168.8.111:27017/pokedex?authSource=admin"
+const mongoDB = process.env.MONGO_URI || 'mongodb://localhost:27017/pokedex';
+const PORT = process.env.PORT || 5000;
 const app = express()
 const server = http.createServer(app);
 const postsRoute = require('./posts/postsRoute')
@@ -31,8 +33,16 @@ app.use('/api', trainerRoute)
 app.use('/api', authRoute)
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(mongoDB)
+  try {
+    await mongoose.connect(mongoDB, { autoIndex: false });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('MongoDB connection error', err);
+    // Optionally retry or exit
+    process.exit(1);
+  }
 }
+main();
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
   socket.on('message', (msg) => {
@@ -47,6 +57,6 @@ io.on('connection', (socket) => {
     console.log('User disconnected:', socket.id)
   })
 })
-server.listen(5000, () => {
-    console.log('Server running on 5000')
-})
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
