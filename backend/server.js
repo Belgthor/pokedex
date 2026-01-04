@@ -9,7 +9,6 @@ const mongoDB = process.env.MONGO_URI || 'mongodb://localhost:27017/pokedex';
 const PORT = process.env.PORT || 5000;
 const app = express()
 const server = http.createServer(app);
-const postsRoute = require('./posts/postsRoute')
 const pokemonRoute = require('./pokemon/pokemonRoute')
 const trainerRoute = require('./trainer/trainerRoute')
 const authRoute = require('./auth/authRoute')
@@ -27,7 +26,6 @@ app.use(cors({
   optionsSuccessStatus: 200
 }))
 
-app.use('/api', postsRoute)
 app.use('/api', pokemonRoute)
 app.use('/api', trainerRoute)
 app.use('/api', authRoute)
