@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top p-0">
+  <div class="container-fluid">
+    <a routerLink="/" class="navbar-brand overflow-hidden" href="#">{{testUrl}}</a>
+    <button class="navbar-toggler" type="button" (click)="collapsed = !collapsed">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse" [class.collapse]="collapsed" id="navbarContent">
+      <ul class="navbar-nav ms-auto">
+        <!-- <li class="nav-item" ngbDropdown>
+          <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
+            Pokemon
+          </a>
+          <div ngbDropdownMenu class="dropdown-menu">
+            <a ngbDropdownItem href="#" routerLink="/pokemon/all" (click)="collapsed = !collapsed" (click)="$event.preventDefault()">All</a>
+            <a ngbDropdownItem href="#" routerLink="/pokemon/hundo" (click)="collapsed = !collapsed" (click)="$event.preventDefault()">Hundo</a>
+            <a ngbDropdownItem href="#" routerLink="/pokemon/main" (click)="collapsed = !collapsed" (click)="$event.preventDefault()">Main Dex</a>
+            <a ngbDropdownItem href="#" routerLink="/pokemon/xxl" (click)="collapsed = !collapsed" (click)="$event.preventDefault()">XXL Dex</a>
+            <a ngbDropdownItem href="#" routerLink="/pokemon/xxs" (click)="collapsed = !collapsed" (click)="$event.preventDefault()">XXS Dex</a>
+          </div>
+        </li> -->
+        <li class="nav-item">
+          <a routerLink="/auth" (click)="collapsed = !collapsed" (click)="$event.preventDefault()" class="nav-link" href="#">Auth</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/pokemon" (click)="collapsed = !collapsed" (click)="$event.preventDefault()" class="nav-link" href="#">Pokemon</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/trainer" (click)="collapsed = !collapsed" (click)="$event.preventDefault()" class="nav-link" href="#">Trainer</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/trade" (click)="collapsed = !collapsed" (click)="$event.preventDefault()" class="nav-link" href="#">Trade</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/trash" (click)="collapsed = !collapsed" (click)="$event.preventDefault()" class="nav-link" href="#">Trash</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid px-0" style="padding-top:40px;padding-bottom:40px;">
+  <!-- <app-nav-bar></app-nav-bar> -->
+  <router-outlet></router-outlet>
+</div>
+<app-toast />

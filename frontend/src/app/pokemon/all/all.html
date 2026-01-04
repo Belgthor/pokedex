@@ -1,0 +1,73 @@
+<div class="row row-cols-1 row-cols-4 g-1 p-1">
+    @for(mon of filteredItems; track mon._id){
+        <div class="col">
+            <div class="card text-center h-100">
+                <!-- <img (click)="open(content)" [src]="mon.image" class="card-img-top" alt="" [ngClass]="
+                    {
+                        'bg-dmax': mon.dmax,
+                        'bg-costume': mon.costumeName && !mon.shadow,
+                        'bg-gmax': mon.gmaxDex,
+                        'bg-form': mon.formName && !mon.shadow && !mon.dmax && !mon.costumeName && !mon.mainDex,
+                        'bg-shadow': mon.shadow
+                    }" /> -->
+                    @if(mon.release){
+                        <img (click)="open(content)" [src]="mon.image" class="card-img-top" alt="" [ngClass]="
+                    {
+                        'bg-dmax': mon.dmax,
+                        'bg-costume': mon.costumeName && !mon.shadow,
+                        'bg-gmax': mon.gmaxDex,
+                        'bg-form': mon.formName && !mon.shadow && !mon.dmax && !mon.costumeName && !mon.mainDex,
+                        'bg-shadow': mon.shadow
+                    }" />
+                    }@else{
+                        <div (click)="open(content)" class="card-body" [ngClass]="{'bg-secondary':!mon.release}"></div>
+                    }
+                <div class="card-footer p-0" [ngClass]="
+                    {
+                        'bg-success': mon.release && mon.releaseShiny,
+                        'bg-warning': mon.release && !mon.releaseShiny,
+                        'bg-danger': !mon.release && !mon.releaseShiny
+                    }">
+                    <div class="responsive-text">{{("0000" + mon.dex).slice(-4)}}</div>
+                    <div class="responsive-text">{{mon.name}}</div>
+                    @if(mon.shadow){
+                        <div class="responsive-text">Shadow</div>
+                    }
+                    @if(mon.costumeName){
+                        <div class="responsive-text">{{mon.costumeName}}</div>
+                    }
+                    @if(mon.formName){
+                        <div class="responsive-text">{{mon.formName}}</div>
+                    }
+                </div>                                            
+            </div>
+        </div>
+    }
+</div>
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form>
+			<div class="mb-3">
+				<label for="dateOfBirth">Date of birth</label>
+				<div class="input-group">
+					<input
+						id="dateOfBirth"
+						class="form-control"
+						placeholder="yyyy-mm-dd"
+						name="dp"
+						ngbDatepicker
+						#dp="ngbDatepicker"
+					/>
+					<button class="btn btn-outline-secondary bi bi-calendar3" (click)="dp.toggle()" type="button"></button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">Save</button>
+	</div>
+</ng-template>

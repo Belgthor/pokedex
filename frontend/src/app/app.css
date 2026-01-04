@@ -1,0 +1,10 @@
+.ml-auto .dropdown-menu {
+      left: auto !important;
+      right: 0px;
+    }
+.navbar{
+  min-width: 255px;
+}
+.navbar-brand {
+  max-width: 75%;
+}

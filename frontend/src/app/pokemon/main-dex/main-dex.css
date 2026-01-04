@@ -1,0 +1,17 @@
+.responsive-text {
+  font-size: calc(1vw + 1vh); /* Adjust values as needed */
+}
+.your-element {
+  height: 95vh; /* Fallback for older browsers */
+  height: 95dvh; /* Preferred for modern browsers */
+}
+.accordion-header.my-sticky {
+position: -webkit-sticky;
+position: sticky;
+z-index: 1;
+top: 40px; }
+.card-img-top {
+    width: 100%;
+    height: 25vw;
+    object-fit: cover;
+}

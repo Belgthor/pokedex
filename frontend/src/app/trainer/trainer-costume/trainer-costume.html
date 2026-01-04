@@ -1,0 +1,67 @@
+@if(!loading){
+    <nav class="navbar navbar-expand bg-transparent fixed-bottom p-0">
+            <div class="mx-auto">
+            <input type="text" class="border" placeholder="Search" [(ngModel)]="searchText" (keydown.enter)="$event.preventDefault()" (keyup)="onKeyup($event)" />
+            </div>
+    </nav>
+    <div ngbAccordion #accordion="ngbAccordion">
+        @for(region of pokemon | filterNested:searchText; track region._id){
+            <div ngbAccordionItem="{{region._id}}">
+                <h2 ngbAccordionHeader class="my-sticky pb-1">
+                    <button ngbAccordionButton>
+                        {{region._id}}
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div ngbAccordionBody class="p-1">
+                        <ng-template>
+                            <div class="row row-cols-1 row-cols-4 g-1">
+                                @for(mon of region.pokemon; track mon._id){
+                                    <div class="col">
+                                        <div class="card text-center h-100">
+                                            <img [src]="mon.image" class="card-img-top" alt="" [ngClass]="{'bg-secondary':!mon.release}">
+                                            <div class="card-footer p-0">
+                                                @if(mon.release){
+                                                    <div class="btn-group w-100" role="group">
+                                                        @if(!mon.male && !mon.female){
+                                                            <button (click)="updateHundo(mon, 'unknownHundo')" [ngClass]="hundoCheck(mon.trainer, 'unknownHundo') ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm border">&nbsp;</button>
+                                                        }@else{
+                                                            @if(mon.male){
+                                                                <button (click)="updateHundo(mon, 'maleHundo')" [ngClass]="hundoCheck(mon.trainer, 'maleHundo') ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm border">M</button>
+                                                            }
+                                                            @if(mon.female){
+                                                                <button (click)="updateHundo(mon, 'femaleHundo')" [ngClass]="hundoCheck(mon.trainer, 'femaleHundo') ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm border">F</button>
+                                                            }
+                                                        }
+                                                    </div>
+                                                }@else{
+                                                    <div class="responsive-text">&nbsp;</div>
+                                                }
+                                                <div class="responsive-text">{{("0000" + mon.dex).slice(-4)}}</div>
+                                                <div class="responsive-text">{{mon.name}}</div>
+                                                @if(mon.formName){
+                                                    <div class="responsive-text">{{mon.formName}}</div>
+                                                }@else{
+                                                    <div class="responsive-text">&nbsp;</div>
+                                                }
+                                                @if(mon.costumeName){
+                                                    <div class="responsive-text">{{mon.costumeName}}</div>
+                                                }@else{
+                                                    <div class="responsive-text">&nbsp;</div>
+                                                }
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}@else{
+    <div>
+        Loading......
+    </div>
+}

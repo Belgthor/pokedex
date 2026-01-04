@@ -1,0 +1,68 @@
+@if(!loading){
+    <nav class="navbar navbar-expand bg-transparent fixed-bottom p-0">
+        <div class="mx-auto">
+        <input type="text" class="border" placeholder="Search" [(ngModel)]="searchText" (keydown.enter)="$event.preventDefault()" />
+        </div>
+    </nav>
+    <!-- <button (click)="sortByDexAscending()">Sort by Name (Asc)</button>
+    <button (click)="sortByDateDescending()">Sort by ID (Desc)</button> -->
+    <button (click)="sortTasks('asc')">Sort Date Ascending</button>
+    <button (click)="sortTasks('desc')">Sort Date Descending</button>
+    <button (click)="sortTasks2('asc')">Sort Dex Ascending</button>
+    <button (click)="sortTasks2('desc')">Sort Dex Descending</button>
+    <div class="row row-cols-1 row-cols-4 g-1">
+        @for(mon of pokemon | filterBy:searchText; track mon.id){
+            <div class="col">
+                <div class="card text-center h-100">
+                    @if(mon.release){
+                        <img [src]="mon.image" class="card-img-top" alt="" [ngClass]="{'bg-secondary':!mon.release}">
+                    }@else{
+                        <div class="card-body" [ngClass]="{'bg-secondary':!mon.release}"></div>
+                    }
+                    <div class="card-footer p-0">
+                                                    @if(mon.release){
+                                                        <div class="btn-group w-100" role="group">
+                                                            <button [ngClass]="checkDex(mon.trainer) ? 'btn-success' : 'btn-danger'" type="button" class="disabled btn btn-sm border">&nbsp;</button>
+                                                        </div>
+                                                    }@else{
+                                                        <div class="responsive-text">&nbsp;</div>    
+                                                    }
+                                                    @if(mon.releaseShiny){
+                                                        <div class="btn-group w-100" role="group">
+                                                            <!-- <button type="button" class="btn btn-sm btn-warning">&nbsp;</button> -->
+                                                            <button [ngClass]="isShiny(mon.trainer) ? 'btn-success' : 'btn-danger'" type="button" class="disabled btn btn-sm border">SHINY</button>
+                                                        </div>
+                                                    }@else{
+                                                        <div class="responsive-text">&nbsp;</div>
+                                                    }
+                        <div class="btn-group w-100" role="group">
+                            @if(!mon.male && !mon.female){
+                                <button [ngClass]="hundoCheck(mon.trainer, 'unknownHundo') ? 'btn-success' : 'btn-danger'" type="button" class="disabled btn btn-sm border">&nbsp;</button>
+                            }@else{
+                                @if(mon.male){
+                                    <button [ngClass]="hundoCheck(mon.trainer, 'maleHundo') ? 'btn-success' : 'btn-danger'" type="button" class="disabled btn btn-sm border">M</button>
+                                }
+                                @if(mon.female){
+                                    <button [ngClass]="hundoCheck(mon.trainer, 'femaleHundo') ? 'btn-success' : 'btn-danger'" type="button" class="disabled btn btn-sm border">F</button>
+                                }
+                            }
+                        </div>
+                        <div class="responsive-text">{{("0000" + mon.dex).slice(-4)}}</div>
+                        <div class="responsive-text">{{mon.name}}</div>
+                        @if(mon.formName){
+                            <div class="responsive-text">{{mon.formName}}</div>
+                        }@else{
+                            <div class="responsive-text">&nbsp;</div>
+                        }
+                        <div class="responsive-text">{{mon.costumeName}}</div>
+                        <div class="responsive-text">{{mon.costumeNumber}}</div>
+                        <div class="responsive-text">{{mon.releaseDate | date:'longDate'}}</div>
+                        <div class="responsive-text">{{mon.releaseShinyDate | date:'longDate'}}</div>
+                    </div>                                            
+                </div>
+            </div>
+        }
+    </div>
+}@else{
+    ........Loading
+}

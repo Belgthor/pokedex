@@ -1,0 +1,23 @@
+.bg-shadow{
+    background-color: rgb(174, 74, 174);
+}
+.bg-dmax{
+    background-color: rgb(255, 128, 0);
+}
+.bg-costume{
+    background-color: pink;
+}
+.bg-gmax{
+    background-color: rgb(255, 99, 99);
+}
+.bg-form{
+    background-color: rgb(75, 75, 255);
+}
+.responsive-text {
+  font-size: calc(1vw + 1vh); /* Adjust values as needed */
+}
+.card-img-top {
+    width: 100%;
+    height: 25vw;
+    object-fit: cover;
+}

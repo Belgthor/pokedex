@@ -1,0 +1,147 @@
+@if(!loading){
+    <!-- @if(!error){ -->
+        <nav class="navbar navbar-expand bg-transparent fixed-bottom p-0">
+                <div class="mx-auto">
+                <input type="text" class="border" placeholder="Search" [(ngModel)]="searchText" (keydown.enter)="$event.preventDefault()" (keyup)="onKeyup($event)" />
+                </div>
+        </nav>
+        <div ngbAccordion #accordion="ngbAccordion">
+            @for(region of data | filterNested:searchText; track region._id){
+                <div ngbAccordionItem="{{region._id}}">
+                    <h2 ngbAccordionHeader class="my-sticky pb-1">
+                        <button ngbAccordionButton>
+                            {{region._id}}
+                            @if(dex != 'hundo'){
+                                {{totalHave2(region._id)}} / {{totalList2(region._id)}}
+                            }
+                        </button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody class="p-1">
+                            <ng-template>
+                                <div class="row row-cols-1 row-cols-4 g-1">
+                                    @for(mon of region.pokemon; track mon._id){
+                                        <div class="col">
+                                            <div class="card text-center h-100">
+@if(dex === 'shiny'){
+                                                  <img [src]="filterMain(mon.pokemon).imageShiny" class="card-img-top" alt="" [ngClass]="{'bg-secondary':!mon.pokemon[0].releaseShiny}">
+}@else{
+                                                 <img [src]="mon.image" class="card-img-top" alt="" [ngClass]="{'bg-secondary':!mon.release}">
+}
+                                             <div class="card-footer p-0">
+@if(dex==='xxl' || dex==='xxs' || dex==='costume' || dex==='lucky' || dex==='perfect'){   
+                                                    @if(mon.release){
+                                                        <div class="btn-group w-100" role="group">
+                                                            <button (click)="updateDex(mon)" [ngClass]="checkDex(mon.trainer) ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm">&nbsp;</button>
+                                                        </div>
+                                                    }@else{
+                                                        <div class="responsive-text">&nbsp;</div>    
+                                                    }
+}
+@if(dex === 'shiny'){
+                                                    @if(mon.pokemon[0].releaseShiny){
+                                                        @if(mon.pokemon.length == 1){
+                                                            <!-- @if(mon.pokemon[0].releaseShiny){ -->
+                                                            <div class="btn-group w-100" role="group">
+                                                                <!-- <button type="button" class="btn btn-sm btn-warning">&nbsp;</button> -->
+                                                                <button (click)="updateDex(mon.pokemon[0])" [ngClass]="checkDex(mon.pokemon[0].trainer) ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm">&nbsp;</button>
+                                                            </div>
+                                                        }@else{
+                                                            <!-- <div class="responsive-text">MULTIPLE</div> -->
+                                                            <div class="btn-group w-100" role="group">
+                                                                <button class="btn btn-sm" (click)="openScrollableContent(longContent,mon.pokemon)" [ngClass]="checkShiny(mon.pokemon)">Multiple</button>
+                                                            </div>
+                                                        }
+                                                    }@else{
+                                                        <div class="responsive-text">&nbsp;</div>
+                                                    }
+}
+@if(dex==='costume'){
+                                                    @if(mon.releaseShiny){
+                                                        <div class="btn-group w-100" role="group">
+                                                            <!-- <button type="button" class="btn btn-sm btn-warning">&nbsp;</button> -->
+                                                            <button (click)="updateShiny(mon)" [ngClass]="isShiny(mon.trainer) ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm">SHINY</button>
+                                                        </div>
+                                                    }@else{
+                                                        <div class="responsive-text">&nbsp;</div>
+                                                    }
+}
+@if(dex==='costume'|| dex==='hundo'){
+                                                        <div class="btn-group w-100" role="group">
+                                                            @if(!mon.male && !mon.female){
+                                                                <button (click)="updateHundo(mon, 'unknownHundo')" [ngClass]="hundoCheck(mon.trainer, 'unknownHundo') ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm border">&nbsp;</button>
+                                                            }@else{
+                                                                @if(mon.male){
+                                                                    <button (click)="updateHundo(mon, 'maleHundo')" [ngClass]="hundoCheck(mon.trainer, 'maleHundo') ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm border">M</button>
+                                                                }
+                                                                @if(mon.female){
+                                                                    <button (click)="updateHundo(mon, 'femaleHundo')" [ngClass]="hundoCheck(mon.trainer, 'femaleHundo') ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm border">F</button>
+                                                                }
+                                                            }
+                                                        </div>
+}
+@if(dex === 'shiny'){
+                                                        <div class="responsive-text">{{("0000" + mon.pokemon[0].dex).slice(-4)}}</div>
+                                                        <div class="responsive-text">{{mon.pokemon[0].name}}</div>
+}@else{
+                                                        <div class="responsive-text">{{("0000" + mon.dex).slice(-4)}}</div>
+                                                        <div class="responsive-text">{{mon.name}}</div>
+}
+@if(dex==='costume' || dex==='hundo'){
+                                                    @if(mon.formName){
+                                                        <div class="responsive-text">{{mon.formName}}</div>
+                                                    }
+                                                    @if(mon.costumeName){
+                                                        <div class="responsive-text">{{mon.costumeName}}</div>
+                                                    }
+}
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <ng-template #longContent let-modal>
+            @if(selectShiny){
+                <div class="modal-header">
+                    <h4 class="modal-title responsive-text">{{("0000" + selectShiny[0].dex).slice(-4)}} {{selectShiny[0].name}}</h4>
+                    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-1 row-cols-4 g-1">
+                        @for(mon of selectShiny; track mon._id){
+                            <div class="col">
+                                <div class="card text-center h-100">
+                                    <img [src]="mon.imageShiny" class="card-img-top" alt="" [ngClass]="{'bg-secondary':!mon.releaseShiny}">
+                                    <div class="card-footer p-0">
+                                        @if(mon.releaseShiny){
+                                            <div class="btn-group w-100" role="group">
+                                                <button (click)="updateDex(mon);modal.close('Close click')" [ngClass]="checkDex(mon.trainer) ? 'btn-success' : 'btn-danger'" type="button" class="btn btn-sm">&nbsp;</button>
+                                            </div>
+                                        }@else{
+                                            <div class="responsive-text">&nbsp;</div>
+                                        }
+                                        <div class="responsive-text">{{mon.formName}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <!-- <pre>{{selectShiny | json}}</pre> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+                </div>
+            }
+        </ng-template>
+    <!-- }@else{
+        {{error}}
+    } -->
+}@else{
+    Loading.........
+}
