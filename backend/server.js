@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
 const http = require('http')
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose')
 var jwt = require("jsonwebtoken");
 const view = __dirname + '/view/browser/'
@@ -21,6 +22,7 @@ const io = new Server(server, {
 })
 app.use(express.static(view))
 app.use(express.json())
+app.use(cookieParser());
 app.use(cors({
   origin: ['https://pokedex.netfamily.ca','http://localhost:4200'],
   optionsSuccessStatus: 200

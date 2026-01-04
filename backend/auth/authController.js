@@ -52,11 +52,8 @@ exports.login = async (req, res) => {
         console.log(refreshToken )
         return res.json({ token });
   } catch (error) {
-        console.error("Registration error: ", error);
-        return res.json(
-            { error: "Internal Server error" },
-            { status: 500 }
-        );
+        console.error("Login error: ", error);
+        return res.status(500).json({ error: "Internal Server error" });
   }
 }
 exports.changePW =  async (req, res) => {
@@ -94,10 +91,7 @@ exports.changePW =  async (req, res) => {
         return res.json({ token });
     } catch (error) {
         console.error("Change Password error: ", error);
-        return res.json(
-            { error: "Internal Server error" },
-            { status: 500 }
-        );
+        return res.status(500).json({ error: "Internal Server error" });
   }
 }
 exports.refresh = async (req, res) => {
@@ -117,29 +111,20 @@ exports.refresh = async (req, res) => {
         const refreshToken = req.cookies.jwt;
 
         // Verifying refresh token
-        const trainer = await Trainer.findOne({
-            name: name,
-        })
-        jwt.verify(refreshToken, config.refresh,
-            (err, decoded) => {
-                if (err) {
-
-                    // Wrong Refesh Token
-                    return res.status(406).json({ message: 'Unauthorized' });
-                }
-                else {
-                    // Correct token we send a new access token
-                    
-                    const token = jwt.sign(
-                        { id: trainer._id },
-                        config.secret,
-                        {
-                            expiresIn: '1m', // 86400 24 hours 2629800 1 month 365d 1 year
-                        }
-                    )
-                    return res.json({ token });
-                }
-            })
+const trainer = await Trainer.findOne({ name: name });
+if (!trainer) {
+  return res.status(404).json({ message: 'Trainer not found' });
+}
+jwt.verify(refreshToken, config.refresh, (err, decoded) => {
+  if (err) {
+    return res.status(406).json({ message: 'Unauthorized' });
+  } else {
+    const token = jwt.sign({ id: trainer._id }, config.secret, {
+      expiresIn: '1m',
+    });
+    return res.json({ token });
+  }
+});
     } else {
         return res.status(406).json({ message: 'Unauthorized' });
     }
@@ -163,13 +148,10 @@ exports.register = async (req, res) => {
         });
         const roles = await Role.findOne({ name: "trainer" })
         newTrainer.roles = [roles._id];
-        newTrainer.save()
-        return res.json({message: 'User registered successfully.'}, {status: 201});
+        await newTrainer.save();
+        return res.status(201).json({ message: 'User registered successfully.' });
     }catch(error){
         console.error("Registration error: ", error);
-        return res.json(
-            { error: "Internal Server error" },
-            { status: 500 }
-        );
+        return res.status(500).json({ error: "Internal Server error" });
     }
 }
